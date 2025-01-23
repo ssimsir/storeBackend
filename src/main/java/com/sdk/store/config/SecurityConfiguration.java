@@ -39,8 +39,7 @@ public class SecurityConfiguration {
 			//.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name(), Roles.PREMIUM_USER.name()))
 			//.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").hasRole("USER"))
 			.authorizeHttpRequests(request -> request.anyRequest().authenticated())
-					//.requestMatchers(HttpMethod.GET,"/posts").permitAll()				 	
-				 	//.requestMatchers("/admin/**").hasAnyAuthority(Role.ADMIN.name())				 												
+					//.requestMatchers(HttpMethod.GET,"/posts").permitAll()				 					 												
 			.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);		
 		return http.build();
