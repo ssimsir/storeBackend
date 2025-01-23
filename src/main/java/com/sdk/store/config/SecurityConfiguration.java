@@ -33,21 +33,16 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests(request -> request
-					.requestMatchers("/API/v1/products/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
-					.requestMatchers("/**").permitAll()
-					
-					.requestMatchers("/API/v1/auth/**").permitAll()
-					
-					//.requestMatchers(HttpMethod.GET,"/posts").permitAll()
-				 	
-				 	//.requestMatchers("/admin/**").hasAnyAuthority(Role.ADMIN.name())
-				 	
-				 	.anyRequest().authenticated()
-			)				
+			//.authorizeHttpRequests(request -> request.requestMatchers("/**").permitAll())
+			.authorizeHttpRequests(request -> request.requestMatchers("/store/**", "/web/**", "/assets/**", "/API/v1/auth/**").permitAll())
+			.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").permitAll())
+			//.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name(), Roles.PREMIUM_USER.name()))
+			//.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").hasRole("USER"))
+			.authorizeHttpRequests(request -> request.anyRequest().authenticated())
+					//.requestMatchers(HttpMethod.GET,"/posts").permitAll()				 	
+				 	//.requestMatchers("/admin/**").hasAnyAuthority(Role.ADMIN.name())				 												
 			.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-		
+			.authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);		
 		return http.build();
 	}
 	
