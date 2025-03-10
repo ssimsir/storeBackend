@@ -33,14 +33,36 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-			//.authorizeHttpRequests(request -> request.requestMatchers("/**").permitAll())
-			.authorizeHttpRequests(request -> request.requestMatchers("/store/**", "/web/**", "/assets/**", "/API/v1/auth/**").permitAll())
-			//.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").permitAll())
-			.authorizeHttpRequests(request -> request.requestMatchers("/API/v1/products/**").hasAnyAuthority(Roles.USER.getRole(), Roles.ADMIN.getRole(), Roles.PREMIUM_USER.getRole()))
-			.authorizeHttpRequests(request -> request.anyRequest().authenticated())
-					//.requestMatchers(HttpMethod.GET,"/posts").permitAll()				 					 												
+			.authorizeHttpRequests(request -> request
+				.requestMatchers(
+					"/",
+					"/index",
+					"/store/**", 
+					"/web/**", 
+					"/assets/**",
+					"/resources/**",
+					"/js/**",
+					"/css/**",
+					"/images/**", 
+					"/API/v1/auth/**",
+					"/v2/api-docs",
+					"/v3/api-docs",
+					"/v3/api-docs/**",
+					"/swagger-resources",
+					"/swagger-resources/**",
+					"/configuration/ui",
+					"/configuration/security",
+					"/swagger-ui/**",
+					"/webjars/**",
+					"/swagger-ui.html"
+				).permitAll()
+				.requestMatchers("/API/v1/products/**").hasAnyAuthority(Roles.USER.getRole(), Roles.ADMIN.getRole(), Roles.PREMIUM_USER.getRole())
+				.anyRequest().permitAll()
+			)
 			.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);		
+			.authenticationProvider(authenticationProvider())
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		
 		return http.build();
 	}
 	
